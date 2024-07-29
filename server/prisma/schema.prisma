@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
+  password  String
+  projects  Project[] // One-to-Many relationship with Project
+  tasks     Task[]    // One-to-Many relationship with Task
+  comments  Comment[] // One-to-Many relationship with Comment
+}
+
+model Project {
+  id        Int       @id @default(autoincrement())
+  name      String
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  tasks     Task[]    // One-to-Many relationship with Task
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  dueDate     DateTime?
+  priority    Int
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  taskLabels  TaskLabel[]
+  comments    Comment[] // One-to-Many relationship with Comment
+  parent      Task?     @relation("Subtasks", fields: [parentId], references: [id])
+  parentId    Int?
+  subtasks    Task[]    @relation("Subtasks")
+}
+
+model Label {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  taskLabels TaskLabel[]
+}
+
+model Comment {
+  id      Int     @id @default(autoincrement())
+  content String
+  task    Task    @relation(fields: [taskId], references: [id])
+  taskId  Int
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int
+}
+
+model TaskLabel {
+  taskId  Int
+  labelId Int
+  task    Task  @relation(fields: [taskId], references: [id])
+  label   Label @relation(fields: [labelId], references: [id])
+  @@id([taskId, labelId])
+}
