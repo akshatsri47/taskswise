@@ -5,4 +5,8 @@ const loginschema = z.object({
      password:z.string()
 
 });
+
+export const taskschema = z.object({
+    
+})
 export  default loginschema;

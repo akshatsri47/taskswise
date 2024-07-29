@@ -1,5 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import taskrouter from './routes/task.js'
+
 
 import { testConnection } from './config/db.js';
 import dotenv from 'dotenv';
@@ -13,3 +15,4 @@ app.use(bodyParser.json())
 app.listen(3000);
 testConnection();
 app.use("/",router)
+app.use("/app",taskrouter)
