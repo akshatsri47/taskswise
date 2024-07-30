@@ -13,7 +13,7 @@ router.post("/taskadd",async (req,res) =>{
         priority,
       }  } )
     console.log("task saved succesfully")
-    res.status(201).json(task);
+    res.status(201).json(Task);
 }
 catch(error){
     console.error("Error saving task:", error);
