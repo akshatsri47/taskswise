@@ -1,33 +1,74 @@
+import prisma from "../prisma.js";
 import express from 'express';
-import prisma from '../prisma.js';
-
 const router = express.Router();
-router.post("/taskadd",async (req,res) =>{
-    const {title,description,duedate,priority} = req.body;
+router.post("/addtask", async(req,res)=>{
+    const{title,description,dueDate, priority,projectId,userId} = req.body
     try{
-    const  Task = await  prisma.task.create({
+    const task = await prisma.task.create({
         data:{
         title,
         description,
-        duedate: new Date(),
+        dueDate,
         priority,
-      }  } )
-    console.log("task saved succesfully")
-    res.status(201).json(Task);
+        project:{
+            connect:{
+                id:projectId
+            }
+        },
+        user:{
+            connect:{
+                id:userId
+            }
+        }
+    }
+    })
+    res.json(task);
 }
 catch(error){
-    console.error("Error saving task:", error);
+    console.log(error.message);
 }
-})
-router.get("/tasks",async(req,res)=>{
-    try{
-        const Task = await prisma.task.findMany()
-        res.json(Task)
 
+})
+router.get("/gettask",async(req,res)=>{
+    try{
+    const task = await prisma.task.findMany();
+    res.json(task)
     }
     catch(error){
-        console.log("error fetching records")
+        console.log(error.message)
+    
     }
 })
+router.put("/addtask/:id",async(req,res)=>{
+    const{title,description,dueDate, priority,projectId,userId} = req.body
+    const{id} = req.params;
+    try{
+        const task = await prisma.task.update({
+            where:{id:parseInt(id)},
+            data:{
+                title,
+                description,
+                dueDate,
+                priority,
+                project:{
+                    connect:{
+                        id:projectId
+                    }
+                },
+                user:{
+                    connect:{
+                        id:userId
+                    }
+                }
+            } 
 
+        })
+        res.json(task);
+    }
+    catch(error){
+        console.log(error.message);
+    }
+
+
+})
 export default router
