@@ -49,23 +49,23 @@ router.post("/login", async (req, res) => {
         });
 
         if (!user) {
-            console.log('User not found for email:', email); // Debugging statement
+            
             return res.status(404).json({ error: 'User not found' });
         }
 
-        console.log(`User found: ${user.email}, Hashed Password: ${user.password}`); // Debugging statement
+        
 
         const checkPass = await comparepassword(password, user.password);
-        console.log(`Password Comparison Result: ${checkPass}`); // Debugging statement
+        
         if (!checkPass) {
-            console.log('Invalid password for user:', email); // Debugging statement
+           
             return res.status(401).json({ error: 'Invalid password' });
         }
 
         const jwtoken = await tokengenration(user.id);
         res.status(200).json({ user, token: jwtoken });
     } catch (error) {
-        console.log('Error during login:', error.message); // Debugging statement
+        
         res.status(500).json({ error: error.message });
     }
 });

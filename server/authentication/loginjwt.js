@@ -24,10 +24,10 @@ dotenv.config();
  export const comparepassword = async (password, hashedpassword) => {
     try {
         const result = await bcrypt.compare(password, hashedpassword);
-        console.log(`Password comparison result: ${result}`); // Debugging statement
+       
         return result;
     } catch (error) {
-        console.error('Error comparing passwords:', error); // Debugging statement
+        console.error('Error comparing passwords:', error); 
         return false;
     }
 };
